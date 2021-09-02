@@ -1,0 +1,15 @@
+---
+
+- name: start powerdns
+  become: true
+  docker_container:
+    container_default_behavior: no_defaults
+    image: "{{ powerdns_docker_image }}"
+    name: "{{ powerdns_docker_container_name }}"
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    privileged: yes
+    volumes:
+      - "{{ powerdns_config_dir }}:/etc/powerdns/pdns.d/"
+    restart: yes

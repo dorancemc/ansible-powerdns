@@ -1,0 +1,38 @@
+---
+
+- name: pdns_server | Installing PowerDNS Pre-Reqs
+  apt:
+    name: [python3-pymysql]
+    state: present
+  become: true
+  register: result
+  until: result is succeeded
+
+- name: pdns_server | Checking If DB Tables Exist
+  mysql_query:
+    login_host: "{{ powerdns.gmysql.host }}"
+    login_user: "{{ powerdns.gmysql.user }}"
+    login_password: "{{ powerdns.gmysql.password }}"
+    query:
+    - "SELECT count(*) as value FROM information_schema.tables WHERE table_name='domains' AND table_schema='{{ powerdns.gmysql.dbname }}';"
+  no_log: true
+  register: pdns_tables
+
+- name: Copy file db schema
+  copy:
+    src: powerdns.schema.mysql.sql
+    dest: /tmp/powerdns.schema.mysql.sql
+  when:
+    - (pdns_tables.query_result[0][0]['value'] == 0)
+
+- name: pdns_server | importing db schema
+  mysql_db:
+    state: import
+    name: "{{ powerdns.gmysql.dbname }}"
+    login_host: "{{ powerdns.gmysql.host }}"
+    login_user: "{{ powerdns.gmysql.user }}"
+    login_password: "{{ powerdns.gmysql.password }}"
+    target: /tmp/powerdns.schema.mysql.sql
+  no_log: true
+  when:
+    - (pdns_tables.query_result[0][0]['value'] == 0)

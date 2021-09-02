@@ -1,0 +1,53 @@
+---
+# Defaults file for ansible-powerdns
+
+# Variables for resolv.conf on host
+dns_systemd_resolved_disable: true
+network_pri_domain_name: example.com
+dns_resolv_conf_nameservers:
+  - 8.8.8.8
+  - 1.1.1.1
+
+# Defines primary domain name of dns environment
+dns_pri_domain_name: local.example.com
+
+# Default path for etc files used in containers
+dns_basepath: /data
+
+# docker container
+powerdns_version: 4.4.1
+powerdns_docker_image: "dorancemc/powerdns:{{ powerdns_version }}"
+powerdns_docker_container_name: powerdns
+
+# Define variables for powerdns
+powerdns_config_dir: "{{ dns_basepath }}/etc/powerdns/"
+powerdns_user: root
+powerdns_group: root
+
+powerdns:
+  backend: gmysql  # mysql https://doc.powerdns.com/authoritative/backends/generic-mysql.html
+  gmysql:
+    host: 127.0.0.1
+    port: 3306
+    dbname: mypdns
+    user: mypdns
+    password: changeme
+    dnssec: yes
+  dnsupdate: yes  # ddns https://doc.powerdns.com/authoritative/settings.html
+  allow-dnsupdate-from: 127.0.0.1/32
+  api: yes  # api https://doc.powerdns.com/recursor/http-api/
+  api-key: changeme
+  webserver: yes  # web https://doc.powerdns.com/recursor/http-api/prometheus.html
+  webserver-address: 0.0.0.0
+  webserver-allow-from: 0.0.0.0/0
+  webserver-password: changeme
+  webserver-port: 8081
+  webserver-loglevel: normal
+  log-dns-queries: no
+  loglevel: 3
+  local-address: 0.0.0.0  # interface
+  local-port: 53
+  default-soa-content: a.notconfigured.dns.server.local hostmaster.@ 0 10800 3600 604800 3600
+  expand-alias: yes
+  resolver: 127.0.0.1
+

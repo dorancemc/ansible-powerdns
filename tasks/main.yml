@@ -1,0 +1,24 @@
+---
+# tasks file for powerdns
+
+- include: systemd_resolved.yml
+  when:
+    - dns_systemd_resolved_disable|bool
+
+# powerdns
+- include: powerdns_backend.yml
+  when: powerdns.backend=='gmysql'
+  tags:
+  - dns_backend
+
+- include: powerdns_config.yml
+  tags:
+  - dns_config
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- include: powerdns_nsrecords.yml
+  tags:
+  - dns_nsrecords
+
