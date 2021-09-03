@@ -25,5 +25,5 @@
     network_mode: host
     privileged: yes
     volumes:
-      - "{{ powerdns_config_dir }}:/etc/powerdns/"
+      - "{{ pdns_recursor_config_dir }}:/etc/powerdns/"
     restart: yes
