@@ -13,3 +13,17 @@
     volumes:
       - "{{ powerdns_config_dir }}:/etc/powerdns/pdns.d/"
     restart: yes
+
+- name: start pdns_recursor
+  become: true
+  docker_container:
+    container_default_behavior: no_defaults
+    image: "{{ pdns_recursor_docker_image }}"
+    name: "{{ pdns_recursor_docker_container_name }}"
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    privileged: yes
+    volumes:
+      - "{{ powerdns_config_dir }}:/etc/powerdns/"
+    restart: yes

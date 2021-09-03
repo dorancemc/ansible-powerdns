@@ -15,10 +15,14 @@
   tags:
   - dns_config
 
+- include: powerdns_recursor.yml
+  when: powerdns_recursor_enable
+  tags:
+  - dns_recursor
+
 - name: Flush handlers
   meta: flush_handlers
 
 - include: powerdns_nsrecords.yml
   tags:
   - dns_nsrecords
-

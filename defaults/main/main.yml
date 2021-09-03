@@ -19,6 +19,11 @@ powerdns_version: 4.4.1
 powerdns_docker_image: "dorancemc/powerdns:{{ powerdns_version }}"
 powerdns_docker_container_name: powerdns
 
+powerdns_recursor_enable: false
+pdns_recursor_version: 4.4.2
+pdns_recursor_docker_image: "dorancemc/pdns_recursor:{{ pdns_recursor_version }}"
+pdns_recursor_docker_container_name: pdns_recursor
+
 # Define variables for powerdns
 powerdns_config_dir: "{{ dns_basepath }}/etc/powerdns/"
 powerdns_user: root
@@ -51,3 +56,22 @@ powerdns:
   expand-alias: yes
   resolver: 127.0.0.1
 
+powerdns_recursor:
+  config-dir: /etc/powerdns
+  hint-file: /usr/share/dns/root.hints
+  # include-dir: /etc/powerdns/recursor.d
+  local-address: 127.0.0.1
+  local-port: 5301
+  loglevel: 6
+  # lua-config-file: /etc/powerdns/recursor.lua
+  public-suffix-list-file: /usr/share/publicsuffix/public_suffix_list.dat
+  quiet: yes
+  security-poll-suffix: 
+  webserver: yes
+  webserver-address: 127.0.0.1
+  webserver-allow-from: 127.0.0.1
+  webserver-loglevel: normal
+  webserver-password: changeme
+  webserver-port: 8082
+  # api-config-dir: 
+  api-key: changeme

@@ -1,0 +1,21 @@
+---
+
+- name: Creates directory "{{ powerdns_config_dir }}"
+  become: true
+  file:
+    path: "{{ powerdns_config_dir }}"
+    state: directory
+    owner: "{{ powerdns_user }}"
+    group: "{{ powerdns_group }}"
+    mode: 0755
+
+- name: powerdns_recursor | configuring powerdns recursor
+  template:
+    src: "{{ 'etc/powerdns/' + item }}"
+    dest: "{{ powerdns_config_dir + item }}"
+    owner: "{{ powerdns_user }}"
+    group: "{{ powerdns_group }}"
+  become: true
+  loop:
+    - "recursor.conf"
+  notify: start pdns_recursor
