@@ -1,4 +1,5 @@
 ---
+
 - name: Creates directory "{{ powerdns_config_dir }}"
   become: true
   file:
@@ -8,7 +9,7 @@
     group: "{{ powerdns_group }}"
     mode: 0755
 
-- name: powerdns_server | configuring powerdns server
+- name: powerdns_recursor | configuring powerdns recursor
   template:
     src: "{{ 'etc/powerdns/' + item }}"
     dest: "{{ powerdns_config_dir + item }}"
@@ -16,5 +17,5 @@
     group: "{{ powerdns_group }}"
   become: true
   loop:
-    - "powerdns.conf"
-  notify: start powerdns
+    - "recursor.conf"
+  notify: start pdns_recursor
