@@ -15,7 +15,6 @@
     owner: "{{ powerdns_user }}"
     group: "{{ powerdns_group }}"
   become: true
-  register: powerdns_configured
   loop:
     - "powerdns.conf"
   notify: start powerdns
