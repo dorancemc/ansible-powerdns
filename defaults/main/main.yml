@@ -19,17 +19,18 @@ powerdns_version: 4.4.1
 powerdns_docker_image: "dorancemc/powerdns:{{ powerdns_version }}"
 powerdns_docker_container_name: powerdns
 
-powerdns_recursor_enable: false
+powerdns_recursor_enable: true
 pdns_recursor_version: 4.4.2
 pdns_recursor_docker_image: "dorancemc/pdns_recursor:{{ pdns_recursor_version }}"
 pdns_recursor_docker_container_name: pdns_recursor
 
 # Define variables for powerdns
 powerdns_config_dir: "{{ dns_basepath }}/etc/powerdns/"
+pdns_recursor_config_dir: "{{ dns_basepath }}/etc/pdns_recursor/"
 powerdns_user: root
 powerdns_group: root
 
-powerdns:
+powerdns:  # https://doc.powerdns.com/authoritative/settings.html
   backend: gmysql  # mysql https://doc.powerdns.com/authoritative/backends/generic-mysql.html
   gmysql:
     host: 127.0.0.1
@@ -38,11 +39,11 @@ powerdns:
     user: mypdns
     password: changeme
     dnssec: yes
-  dnsupdate: yes  # ddns https://doc.powerdns.com/authoritative/settings.html
+  dnsupdate: yes  
   allow-dnsupdate-from: 127.0.0.1/32
-  api: yes  # api https://doc.powerdns.com/recursor/http-api/
+  api: yes  # api https://doc.powerdns.com/authoritative/http-api/
   api-key: changeme
-  webserver: yes  # web https://doc.powerdns.com/recursor/http-api/prometheus.html
+  webserver: yes  # web
   webserver-address: 0.0.0.0
   webserver-allow-from: 0.0.0.0/0
   webserver-password: changeme
@@ -50,23 +51,24 @@ powerdns:
   webserver-loglevel: normal
   log-dns-queries: no
   loglevel: 3
-  local-address: 0.0.0.0  # interface
-  local-port: 53
+  local-address: 127.0.0.1  # interface
+  local-port: 5301
   default-soa-content: a.notconfigured.dns.server.local hostmaster.@ 0 10800 3600 604800 3600
   expand-alias: yes
   resolver: 127.0.0.1
 
-powerdns_recursor:
+powerdns_recursor:  # https://doc.powerdns.com/recursor/settings.html
   config-dir: /etc/powerdns
   hint-file: /usr/share/dns/root.hints
   # include-dir: /etc/powerdns/recursor.d
-  local-address: 127.0.0.1
-  local-port: 5301
+  local-address: 0.0.0.0
+  local-port: 53
   loglevel: 6
   # lua-config-file: /etc/powerdns/recursor.lua
   public-suffix-list-file: /usr/share/publicsuffix/public_suffix_list.dat
   quiet: yes
   security-poll-suffix: 
+  api-key: changeme
   webserver: yes
   webserver-address: 127.0.0.1
   webserver-allow-from: 127.0.0.1
@@ -74,4 +76,7 @@ powerdns_recursor:
   webserver-password: changeme
   webserver-port: 8082
   # api-config-dir: 
-  api-key: changeme
+  forward-zones: "{{ dns_pri_domain_name }}=127.0.0.1:5301;"
+  trace: no
+
+forward_zones_plus: []
