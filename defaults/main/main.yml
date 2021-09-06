@@ -30,4 +30,8 @@ pdns_recursor_config_dir: "{{ dns_basepath }}/etc/pdns_recursor/"
 powerdns_user: root
 powerdns_group: root
 
-
+# variables to create records with the powerdns api
+powerdns_apiurl: http://127.0.0.1:{{ powerdns['webserver-port'] }}
+powerdns_serverid: localhost
+powerdns_apitoken: changeme
+powerdns_default_ttl: 3600

@@ -1,0 +1,51 @@
+---
+
+- name: checking if zone exist {{ ns_zone }}
+  uri:
+    url: "{{ powerdns_apiurl }}/api/v1/servers/{{ powerdns_serverid }}/zones/{{ ns_zone }}"
+    method: GET
+    return_content: yes
+    headers:
+      X-API-Key: "{{ powerdns_apitoken }}"
+    status_code: [200]
+  register: result
+
+- name: create/update ns record {{ ns_name }}/{{ ns_type }}
+  uri:
+    url: "{{ powerdns_apiurl }}/api/v1/servers/{{ powerdns_serverid }}/zones/{{ ns_zone }}"
+    method: PATCH
+    return_content: yes
+    body_format: json
+    headers:
+      X-API-Key: "{{ powerdns_apitoken }}"
+    status_code: [200,204]
+    body: {"rrsets":
+            [{
+            "name":  "{{ ns_name }}.",
+            "type":  "{{ ns_type }}",
+            "ttl":  "{{ ns_ttl | default (powerdns_default_ttl) }}",
+            "changetype":  "REPLACE",
+            "records": "{{ ns_answers }}"
+            }]
+          }
+  register: result
+  when: state=='present'
+
+- name: delete ns record {{ ns_name }}/{{ ns_type }}
+  uri:
+    url: "{{ powerdns_apiurl }}/api/v1/servers/{{ powerdns_serverid }}/zones/{{ ns_zone }}"
+    method: PATCH
+    return_content: yes
+    body_format: json
+    headers:
+      X-API-Key: "{{ powerdns_apitoken }}"
+    status_code: [200,204]
+    body: {"rrsets":
+            [{
+            "name":  "{{ ns_name }}.",
+            "type":  "{{ ns_type }}",
+            "changetype":  "DELETE"
+            }]
+          }
+  register: result
+  when: state=='absent'
