@@ -1,0 +1,30 @@
+# https://doc.powerdns.com/authoritative/settings.html
+---
+
+powerdns:
+  backend: gmysql  # mysql https://doc.powerdns.com/authoritative/backends/generic-mysql.html
+  gmysql:
+    host: 127.0.0.1
+    port: 3306
+    dbname: mypdns
+    user: mypdns
+    password: changeme
+    dnssec: yes
+  dnsupdate: yes
+  server-id: localhost
+  allow-dnsupdate-from: 127.0.0.1/32
+  api: yes  # api https://doc.powerdns.com/authoritative/http-api/
+  api-key: changeme
+  webserver: yes
+  webserver-address: 0.0.0.0
+  webserver-allow-from: 0.0.0.0/0
+  webserver-password: changeme
+  webserver-port: 8081
+  webserver-loglevel: normal
+  log-dns-queries: no
+  loglevel: 3
+  local-address: 127.0.0.1
+  local-port: 5301
+  default-soa-content: a.notconfigured.dns.server.local hostmaster.@ 0 10800 3600 604800 3600
+  expand-alias: yes
+  resolver: 127.0.0.1
