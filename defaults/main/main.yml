@@ -78,5 +78,6 @@ powerdns_recursor:  # https://doc.powerdns.com/recursor/settings.html
   # api-config-dir: 
   forward-zones: "{{ dns_pri_domain_name }}=127.0.0.1:5301;"
   trace: no
+  max-cache-ttl: 15
 
 forward_zones_plus: []
