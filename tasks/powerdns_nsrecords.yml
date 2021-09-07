@@ -3,7 +3,7 @@
 - name: pdns_server | Check if default zone exist
   command: >
     docker exec -it "{{ powerdns_docker_container_name }}" /bin/bash -c
-    '/usr/bin/pdnsutil list-zone "{{ dns_pri_domain_name }}"'
+    '/usr/bin/pdnsutil list-zone "{{ dns_primary_domain_name }}"'
   become: true
   register: result
   ignore_errors: True
@@ -12,6 +12,6 @@
 - name: pdns_server | Create default zone if not exist
   command: >
     docker exec -it "{{ powerdns_docker_container_name }}" /bin/bash -c
-    '/usr/bin/pdnsutil create-zone "{{ dns_pri_domain_name }}" "{{ inventory_hostname }}"'
+    '/usr/bin/pdnsutil create-zone "{{ dns_primary_domain_name }}" "{{ inventory_hostname }}"'
   become: true
   when: (result.rc > 0)

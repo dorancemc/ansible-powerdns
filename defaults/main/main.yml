@@ -9,7 +9,7 @@ dns_resolv_conf_nameservers:
   - 1.1.1.1
 
 # Defines primary domain name of dns environment
-dns_pri_domain_name: local.example.com
+dns_primary_domain_name: local.example.com
 
 # Default path for etc files used in containers
 dns_basepath: /data

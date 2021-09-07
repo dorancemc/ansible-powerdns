@@ -20,7 +20,7 @@ powerdns_recursor:
   webserver-password: changeme
   webserver-port: 8082
   # api-config-dir: 
-  forward-zones: "{{ dns_pri_domain_name }}=127.0.0.1:5301;"
+  forward-zones: "{{ dns_primary_domain_name }}=127.0.0.1:5301;"
   trace: no
   max-cache-ttl: 15
 
